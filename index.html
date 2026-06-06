@@ -45,7 +45,7 @@ body{
 .date{
   color:#16B0F2;
   font-size:12px;
-  width:60px;
+  width:90px;
   flex-shrink:0;
   white-space:nowrap;
 }
@@ -60,6 +60,7 @@ body{
   box-shadow:0 1px 4px rgba(22,176,242,.35);
   flex-shrink:0;
   white-space:nowrap;
+  letter-spacing:.2px;
 }
 
 .important{
@@ -70,9 +71,10 @@ body{
   color:#fff;
   background:#d13438;
   font-weight:700;
-  box-shadow:0 0 14px rgba(209,52,56,.95);
+  box-shadow:0 0 18px rgba(209,52,56,1);
   flex-shrink:0;
   white-space:nowrap;
+  animation:blinkImportant 1s infinite;
 }
 
 .new{
@@ -83,15 +85,17 @@ body{
   background:#ffd60a;
   color:#000;
   font-weight:800;
-  box-shadow:0 0 10px rgba(255,214,10,.85);
+  box-shadow:0 0 16px rgba(255,214,10,1);
   flex-shrink:0;
   white-space:nowrap;
+  animation:blinkNew 1s infinite;
 }
 
 .title{
   flex-grow:1;
   min-width:0;
   font-size:13px;
+  color:#000;
   font-weight:600;
   overflow:hidden;
   text-overflow:ellipsis;
@@ -100,6 +104,7 @@ body{
 
 .arrow{
   font-size:18px;
+  color:#605e5c;
   margin-left:8px;
   flex-shrink:0;
   white-space:nowrap;
@@ -110,6 +115,32 @@ body{
   color:#d13438;
   font-size:13px;
 }
+
+@keyframes blinkImportant{
+  0%,100%{
+    opacity:1;
+    transform:scale(1);
+    box-shadow:0 0 18px rgba(209,52,56,1);
+  }
+  50%{
+    opacity:.35;
+    transform:scale(.96);
+    box-shadow:0 0 4px rgba(209,52,56,.4);
+  }
+}
+
+@keyframes blinkNew{
+  0%,100%{
+    opacity:1;
+    transform:scale(1);
+    box-shadow:0 0 16px rgba(255,214,10,1);
+  }
+  50%{
+    opacity:.35;
+    transform:scale(.96);
+    box-shadow:0 0 4px rgba(255,214,10,.4);
+  }
+}
 </style>
 </head>
 
@@ -118,11 +149,10 @@ body{
 <div id="news"></div>
 
 <script>
-
 const script = document.createElement('script');
 
 script.src =
-'https://digitalgojp.sharepoint.com/sites/NTA_IBHub12/SiteAssets/news/news-data.js?v='
+'https://digitalgojp.sharepoint.com/sites/NTA_IBHub12/SiteAssets/newsv2/newsv2-data.js?v='
 + Date.now();
 
 script.onload = () => {
@@ -141,12 +171,11 @@ script.onload = () => {
     const url = item.sourceUrl || '#';
     const important = item.important === true;
 
-    const isNew = isNewItem(date,1);
+    const isNew = isToday(date);
 
     const card = document.createElement('a');
 
     card.className = 'newsItem';
-
     card.href = url;
     card.target = '_self';
 
@@ -179,6 +208,7 @@ script.onload = () => {
       card.style.boxShadow = important
         ? '0 6px 16px rgba(209,52,56,.35)'
         : '0 2px 8px rgba(0,0,0,.10)';
+
     });
 
     card.addEventListener('mouseleave',()=>{
@@ -194,6 +224,7 @@ script.onload = () => {
       card.style.boxShadow = important
         ? '0 0 10px rgba(209,52,56,.18)'
         : 'none';
+
     });
 
     card.innerHTML = `
@@ -250,20 +281,18 @@ function formatDate(value){
   const d = new Date(value);
 
   if(isNaN(d)){
-    return value;
+    return value || '';
   }
 
-  return d.toLocaleDateString(
-    'ja-JP',
-    {
-      month:'2-digit',
-      day:'2-digit'
-    }
-  );
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+
+  return `${y}/${m}/${day}`;
 
 }
 
-function isNewItem(value,days){
+function isToday(value){
 
   const d = new Date(value);
 
@@ -271,13 +300,11 @@ function isNewItem(value,days){
     return false;
   }
 
-  const limit = new Date();
+  const now = new Date();
 
-  limit.setDate(
-    limit.getDate() - days
-  );
-
-  return d >= limit;
+  return d.getFullYear() === now.getFullYear()
+    && d.getMonth() === now.getMonth()
+    && d.getDate() === now.getDate();
 
 }
 
@@ -291,7 +318,6 @@ function escapeHtml(str){
     .replaceAll("'","&#039;");
 
 }
-
 </script>
 
 </body>
