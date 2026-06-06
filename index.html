@@ -124,20 +124,17 @@ body{
 }
 
 @keyframes newsIn{
+
   0%{
     opacity:0;
-    transform:translateY(-20px) scale(.95);
-  }
-
-  60%{
-    opacity:1;
-    transform:translateY(3px) scale(1.02);
+    transform:translateX(-30px);
   }
 
   100%{
     opacity:1;
-    transform:translateY(0) scale(1);
+    transform:translateX(0);
   }
+
 }
 
 
@@ -202,7 +199,7 @@ script.onload = () => {
     const card = document.createElement('a');
 
     card.className = 'newsItem';
-card.style.animationDelay = `${index * 0.08}s`;
+card.style.animationDelay = `${index * 0.12}s`;
 card.href = url;
 card.target = '_self';
 
@@ -226,33 +223,29 @@ card.target = '_self';
 
     card.addEventListener('mouseenter',()=>{
 
-      card.style.backgroundColor = '#eef6ff';
+  card.style.transform = 'translateY(-4px)';
 
-      card.style.transform = important
-        ? 'translateY(-3px)'
-        : 'translateY(-1px)';
+  card.style.boxShadow = important
+    ? '0 8px 18px rgba(209,52,56,.22)'
+    : '0 8px 18px rgba(0,0,0,.12)';
 
-      card.style.boxShadow = important
-        ? '0 6px 16px rgba(209,52,56,.35)'
-        : '0 2px 8px rgba(0,0,0,.10)';
+});
 
-    });
+card.addEventListener('mouseleave',()=>{
 
-    card.addEventListener('mouseleave',()=>{
+  card.style.transform = 'translateY(0)';
 
-      card.style.transform = 'none';
+  card.style.backgroundColor = important
+    ? '#fff5f5'
+    : index % 2 === 0
+      ? '#ffffff'
+      : '#f7f7f7';
 
-      card.style.backgroundColor = important
-        ? '#fff5f5'
-        : index % 2 === 0
-          ? '#ffffff'
-          : '#f7f7f7';
+  card.style.boxShadow = important
+    ? '0 0 10px rgba(209,52,56,.18)'
+    : 'none';
 
-      card.style.boxShadow = important
-        ? '0 0 10px rgba(209,52,56,.18)'
-        : 'none';
-
-    });
+});
 
     card.innerHTML = `
       <div class="newsInner">
