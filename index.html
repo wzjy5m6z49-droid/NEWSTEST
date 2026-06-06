@@ -201,7 +201,7 @@ script.onload = () => {
     card.className = 'newsItem';
 card.style.animationDelay = `${index * 0.12}s`;
 card.href = url;
-card.target = '_self';
+card.target = '_top';
 
     card.style.border = important
       ? '1px solid #f3d6d8'
@@ -290,7 +290,7 @@ card.addEventListener('mouseleave',()=>{
 script.onerror = () => {
 
   document.getElementById('news').innerHTML =
-  '<div class="error">表示できません</div>';
+  '<div class="error">newsv2-data.js の読み込み失敗</div>';
 
 };
 
@@ -342,4 +342,3 @@ function escapeHtml(str){
 
 </body>
 </html>
-
