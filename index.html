@@ -45,9 +45,10 @@ body{
 .date{
   color:#16B0F2;
   font-size:12px;
-  width:90px;
   flex-shrink:0;
   white-space:nowrap;
+  width:auto;
+  margin-right:2px;
 }
 
 .dept{
@@ -116,6 +117,31 @@ body{
   font-size:13px;
 }
 
+.newsItem{
+  opacity:0;
+  transform:translateY(-20px) scale(.95);
+  animation:newsIn .5s ease forwards;
+}
+
+@keyframes newsIn{
+  0%{
+    opacity:0;
+    transform:translateY(-20px) scale(.95);
+  }
+
+  60%{
+    opacity:1;
+    transform:translateY(3px) scale(1.02);
+  }
+
+  100%{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+
+
 @keyframes blinkImportant{
   0%,100%{
     opacity:1;
@@ -176,8 +202,9 @@ script.onload = () => {
     const card = document.createElement('a');
 
     card.className = 'newsItem';
-    card.href = url;
-    card.target = '_self';
+card.style.animationDelay = `${index * 0.08}s`;
+card.href = url;
+card.target = '_self';
 
     card.style.border = important
       ? '1px solid #f3d6d8'
@@ -322,3 +349,4 @@ function escapeHtml(str){
 
 </body>
 </html>
+
