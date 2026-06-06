@@ -182,6 +182,8 @@ body{
 <script>
 const script = document.createElement('script');
 
+script.id = 'newsDataScript';
+
 script.src =
 'https://digitalgojp.sharepoint.com/sites/NTA_IBHub12/SiteAssets/news/news-data.js?v='
 + Date.now();
@@ -302,7 +304,7 @@ card.addEventListener('mouseleave',()=>{
 script.onerror = () => {
 
   document.getElementById('news').innerHTML =
-  '<div class="error">newsv2-data.js の読み込み失敗</div>';
+  '<div class="error">表示できません。</div>';
 
 };
 
@@ -350,8 +352,43 @@ function escapeHtml(str){
     .replaceAll("'","&#039;");
 
 }
+setInterval(() => {
+
+  const oldScript = document.getElementById('newsDataScript');
+
+  if(oldScript){
+    oldScript.remove();
+  }
+
+  const reloadScript = document.createElement('script');
+
+  reloadScript.id = 'newsDataScript';
+
+  reloadScript.src =
+    'https://digitalgojp.sharepoint.com/sites/NTA_IBHub12/SiteAssets/news/news-data.js?v='
+    + Date.now();
+
+  reloadScript.onload = () => {
+
+    const currentGeneratedTime =
+      document.getElementById('lastUpdate').textContent.replace('最終生成: ', '');
+
+    const newGeneratedTime =
+      window.newsGeneratedTime || '取得中';
+
+    if(currentGeneratedTime !== newGeneratedTime){
+      location.reload();
+    }
+
+  };
+
+  document.body.appendChild(reloadScript);
+
+}, 5000);
+
 </script>
 
 </body>
 </html>
+
 
