@@ -1,14 +1,33 @@
 <!doctype html>
-<html>
-<body style="margin:0">
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+html,body{
+  margin:0;
+  padding:0;
+  background:transparent;
+  overflow:hidden;
+}
+iframe{
+  width:100%;
+  height:800px;
+  border:0;
+  background:transparent;
+}
+</style>
+</head>
+<body>
+
+<iframe id="innerFrame"></iframe>
 
 <script>
+const frame = document.getElementById('innerFrame');
 
-location.replace(
+frame.src =
   'https://wzjy5m6z49-droid.github.io/NEWSTEST/?v='
-  + Date.now()
-);
-
+  + Date.now();
 </script>
 
 </body>
