@@ -117,13 +117,6 @@ body{
   font-size:13px;
 }
 
-#lastUpdate{
-  font-size:11px;
-  color:#888;
-  padding:0 8px 6px;
-  text-align:right;
-}
-
 .newsItem{
   opacity:0;
   transform:translateY(-20px) scale(.95);
@@ -176,14 +169,11 @@ body{
 
 <body>
 
-<div id="lastUpdate"></div>
 <div id="news"></div>
 
 <script>
 const BASE_URL =
   'https://digitalgojp.sharepoint.com/sites/NTA_IBHub12/SiteAssets/news/';
-
-let currentLatestFile = '';
 
 loadLatestNews();
 
@@ -207,12 +197,6 @@ function loadLatestNews(){
         '<div class="error">latest-news.js の読み込みに失敗しました。</div>';
       return;
     }
-
-    if(window.latestNewsFile === currentLatestFile){
-      return;
-    }
-
-    currentLatestFile = window.latestNewsFile;
 
     loadNewsData(window.latestNewsFile);
 
@@ -259,10 +243,6 @@ function renderNews(){
   const app = document.getElementById('news');
 
   app.innerHTML = '';
-
-  document.getElementById('lastUpdate').textContent =
-    '最終生成: ' +
-    (window.newsGeneratedTime || '取得中');
 
   const data = window.newsV2Data || [];
 
