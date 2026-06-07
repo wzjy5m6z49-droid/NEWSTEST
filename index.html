@@ -31,6 +31,28 @@ body{
   text-decoration:none;
   transition:all .25s ease;
   overflow:hidden;
+  position:relative;
+}
+
+.newsItem::after{
+  content:'';
+  position:absolute;
+  top:0;
+  left:-120%;
+  width:60px;
+  height:100%;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.25),
+    transparent
+  );
+  pointer-events:none;
+}
+
+.newsItem:hover::after{
+  left:120%;
+  transition:left .7s ease;
 }
 
 .newsInner{
@@ -109,6 +131,7 @@ body{
   margin-left:8px;
   flex-shrink:0;
   white-space:nowrap;
+  transition:transform .25s ease;
 }
 
 .error{
@@ -289,18 +312,20 @@ function renderNews(){
 
     card.addEventListener('mouseenter',()=>{
 
-      card.style.transform = 'translateY(-4px)';
+  card.style.transform = 'translateY(-4px)';
 
-      card.style.boxShadow = important
-        ? '0 8px 18px rgba(209,52,56,.22)'
-        : '0 8px 18px rgba(0,0,0,.12)';
+  card.style.boxShadow = important
+    ? '0 8px 18px rgba(209,52,56,.22)'
+    : '0 8px 18px rgba(0,0,0,.12)';
 
-    });
+  card.querySelector('.arrow').style.transform = 'translateX(4px)';
+
+});
 
     card.addEventListener('mouseleave',()=>{
 
       card.style.transform = 'translateY(0)';
-
+      card.querySelector('.arrow').style.transform = 'translateX(0)';
       card.style.backgroundColor = important
         ? '#fff5f5'
         : index % 2 === 0
