@@ -194,7 +194,7 @@ function loadLatestNews(){
 
     if(!window.latestNewsFile){
       document.getElementById('news').innerHTML =
-        '<div class="error">latest-news.js の読み込みに失敗しました。</div>';
+        '<div class="error">表示できません。</div>';
       return;
     }
 
@@ -204,7 +204,7 @@ function loadLatestNews(){
 
   latestScript.onerror = () => {
     document.getElementById('news').innerHTML =
-      '<div class="error">latest-news.js の読み込み失敗</div>';
+      '<div class="error">表示できません。</div>';
   };
 
   document.body.appendChild(latestScript);
@@ -408,4 +408,3 @@ function escapeHtml(str){
 </script>
 </body>
 </html>
-
