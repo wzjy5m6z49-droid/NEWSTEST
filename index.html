@@ -180,25 +180,97 @@ body{
 <div id="news"></div>
 
 <script>
-const script = document.createElement('script');
+const BASE_URL =
+  'https://digitalgojp.sharepoint.com/sites/NTA_IBHub12/SiteAssets/news/';
 
-script.id = 'newsDataScript';
+let currentLatestFile = '';
 
-script.src =
-'https://digitalgojp.sharepoint.com/sites/NTA_IBHub12/SiteAssets/news/news-data-test.js?v='
-+ Date.now();
+loadLatestNews();
 
-script.onload = () => {
+function loadLatestNews(){
 
-const app = document.getElementById('news');
+  removeScript('latestNewsScript');
 
-app.innerHTML = '';
+  window.latestNewsFile = '';
 
-document.getElementById('lastUpdate').textContent =
-  '最終生成: ' +
-  (window.newsGeneratedTime || '取得中');
+  const latestScript = document.createElement('script');
 
-const data = window.newsV2Data || [];
+  latestScript.id = 'latestNewsScript';
+
+  latestScript.src =
+    BASE_URL + 'latest-news.js?v=' + Date.now();
+
+  latestScript.onload = () => {
+
+    if(!window.latestNewsFile){
+      document.getElementById('news').innerHTML =
+        '<div class="error">latest-news.js の読み込みに失敗しました。</div>';
+      return;
+    }
+
+    if(window.latestNewsFile === currentLatestFile){
+      return;
+    }
+
+    currentLatestFile = window.latestNewsFile;
+
+    loadNewsData(window.latestNewsFile);
+
+  };
+
+  latestScript.onerror = () => {
+    document.getElementById('news').innerHTML =
+      '<div class="error">latest-news.js の読み込み失敗</div>';
+  };
+
+  document.body.appendChild(latestScript);
+
+}
+
+function loadNewsData(filePath){
+
+  removeScript('newsDataScript');
+
+  window.newsGeneratedTime = '';
+  window.newsV2Data = [];
+
+  const dataScript = document.createElement('script');
+
+  dataScript.id = 'newsDataScript';
+
+  dataScript.src =
+    BASE_URL + filePath + '?v=' + Date.now();
+
+  dataScript.onload = () => {
+    renderNews();
+  };
+
+  dataScript.onerror = () => {
+    document.getElementById('news').innerHTML =
+      '<div class="error">お知らせデータの読み込み失敗</div>';
+  };
+
+  document.body.appendChild(dataScript);
+
+}
+
+function renderNews(){
+
+  const app = document.getElementById('news');
+
+  app.innerHTML = '';
+
+  document.getElementById('lastUpdate').textContent =
+    '最終生成: ' +
+    (window.newsGeneratedTime || '取得中');
+
+  const data = window.newsV2Data || [];
+
+  if(data.length === 0){
+    app.innerHTML =
+      '<div class="error">表示できるお知らせがありません。</div>';
+    return;
+  }
 
   data.forEach((item,index)=>{
 
@@ -213,9 +285,9 @@ const data = window.newsV2Data || [];
     const card = document.createElement('a');
 
     card.className = 'newsItem';
-card.style.animationDelay = `${index * 0.12}s`;
-card.href = url;
-card.target = '_top';
+    card.style.animationDelay = `${index * 0.12}s`;
+    card.href = url;
+    card.target = '_top';
 
     card.style.border = important
       ? '1px solid #f3d6d8'
@@ -237,29 +309,29 @@ card.target = '_top';
 
     card.addEventListener('mouseenter',()=>{
 
-  card.style.transform = 'translateY(-4px)';
+      card.style.transform = 'translateY(-4px)';
 
-  card.style.boxShadow = important
-    ? '0 8px 18px rgba(209,52,56,.22)'
-    : '0 8px 18px rgba(0,0,0,.12)';
+      card.style.boxShadow = important
+        ? '0 8px 18px rgba(209,52,56,.22)'
+        : '0 8px 18px rgba(0,0,0,.12)';
 
-});
+    });
 
-card.addEventListener('mouseleave',()=>{
+    card.addEventListener('mouseleave',()=>{
 
-  card.style.transform = 'translateY(0)';
+      card.style.transform = 'translateY(0)';
 
-  card.style.backgroundColor = important
-    ? '#fff5f5'
-    : index % 2 === 0
-      ? '#ffffff'
-      : '#f7f7f7';
+      card.style.backgroundColor = important
+        ? '#fff5f5'
+        : index % 2 === 0
+          ? '#ffffff'
+          : '#f7f7f7';
 
-  card.style.boxShadow = important
-    ? '0 0 10px rgba(209,52,56,.18)'
-    : 'none';
+      card.style.boxShadow = important
+        ? '0 0 10px rgba(209,52,56,.18)'
+        : 'none';
 
-});
+    });
 
     card.innerHTML = `
       <div class="newsInner">
@@ -299,16 +371,17 @@ card.addEventListener('mouseleave',()=>{
 
   });
 
-};
+}
 
-script.onerror = () => {
+function removeScript(id){
 
-  document.getElementById('news').innerHTML =
-  '<div class="error">表示できません。</div>';
+  const oldScript = document.getElementById(id);
 
-};
+  if(oldScript){
+    oldScript.remove();
+  }
 
-document.body.appendChild(script);
+}
 
 function formatDate(value){
 
@@ -352,43 +425,7 @@ function escapeHtml(str){
     .replaceAll("'","&#039;");
 
 }
-setInterval(() => {
-
-  const oldScript = document.getElementById('newsDataScript');
-
-  if(oldScript){
-    oldScript.remove();
-  }
-
-  const reloadScript = document.createElement('script');
-
-  reloadScript.id = 'newsDataScript';
-
-  reloadScript.src =
-    'https://digitalgojp.sharepoint.com/sites/NTA_IBHub12/SiteAssets/news/news-data.js?v='
-    + Date.now();
-
-  reloadScript.onload = () => {
-
-    const currentGeneratedTime =
-      document.getElementById('lastUpdate').textContent.replace('最終生成: ', '');
-
-    const newGeneratedTime =
-      window.newsGeneratedTime || '取得中';
-
-    if(currentGeneratedTime !== newGeneratedTime){
-      location.reload();
-    }
-
-  };
-
-  document.body.appendChild(reloadScript);
-
-}, 5000);
-
 </script>
-
 </body>
 </html>
-
 
